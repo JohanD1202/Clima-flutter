@@ -1,5 +1,5 @@
 class Weather {
-  final String cityName;
+  final String city;
   final double temperature;
   final String description;
   final double feelsLike;
@@ -9,7 +9,7 @@ class Weather {
   final DateTime date;
 
   const Weather({
-    required this.cityName,
+    required this.city,
     required this.temperature,
     required this.description,
     required this.feelsLike,
