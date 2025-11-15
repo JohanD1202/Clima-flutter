@@ -10,22 +10,33 @@ class OpenWeatherDatasourceImpl extends WeathersDatasource {
     baseUrl: 'https://api.openweathermap.org/data/2.5',
     queryParameters: {
       'appid': Environment.openWeatherKey,
-      'units': 'metric'
-    }
+      'units': 'metric',
+      'lang': 'es'
+    },
   ));
 
   Weather _jsonToWeather(Map<String, dynamic> json) {
     final openWeatherResponse = OpenWeatherResponse.fromJson(json);
-
     final Weather weather = WeatherMapper.openWeatherToEntity(openWeatherResponse);
     return weather;
   }
 
   @override
   Future<Weather> getCurrentWeatherByCity(String city) async {
-    final response = await dio.get('/weather',
-    queryParameters: {
-      'q': city
+    final response = await dio.get('/weather', queryParameters: {
+      'q': city,
+    });
+    return _jsonToWeather(response.data);
+  }
+
+  @override
+  Future<Weather> getCurrentWeatherByLocation({
+    required double lat,
+    required double lon,
+  }) async {
+    final response = await dio.get('/weather', queryParameters: {
+      'lat': lat,
+      'lon': lon,
     });
     return _jsonToWeather(response.data);
   }

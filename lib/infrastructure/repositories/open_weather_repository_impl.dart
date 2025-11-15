@@ -3,7 +3,6 @@ import 'package:weather_app/domain/entities/weather.dart';
 import 'package:weather_app/domain/repositories/weathers_repository.dart';
 
 class OpenWeatherRepositoryImpl extends WeathersRepository {
-
   final WeathersDatasource datasource;
 
   OpenWeatherRepositoryImpl(this.datasource);
@@ -13,4 +12,11 @@ class OpenWeatherRepositoryImpl extends WeathersRepository {
     return datasource.getCurrentWeatherByCity(city);
   }
 
+  @override
+  Future<Weather> getCurrentWeatherByLocation({
+    required double lat,
+    required double lon,
+  }) {
+    return datasource.getCurrentWeatherByLocation(lat: lat, lon: lon);
+  }
 }

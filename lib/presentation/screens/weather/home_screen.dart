@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:weather_app/presentation/providers/providers.dart';
+//import 'package:weather_app/presentation/providers/providers.dart';
+import 'package:weather_app/presentation/providers/weather/weather_by_location_provider.dart';
 
 class HomeScreen extends StatelessWidget {
 
@@ -24,29 +25,30 @@ class _HomeView extends ConsumerStatefulWidget {
 }
 
 class _HomeViewState extends ConsumerState<_HomeView> {
+  final double lat = 10.9685;
+  final double lon = -74.7813;
 
-  final String defaultCity = "Tuluá";
-  
+  late final Map<String, double> coords = {'lat': lat, 'lon': lon};
+
   @override
   Widget build(BuildContext context) {
-
-    final weatherAsync = ref.watch(weatherProvider(defaultCity));
+    final weatherAsync = ref.watch(weatherByLocationProvider(coords));
 
     return weatherAsync.when(
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, _) => Center(
-        child: Text("Error: $err"),
+      error: (err, _) => Center(child: Text("Error: $err")),
+      data: (weather) => Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Ciudad: ${weather.city}'),
+              Text('Temp: ${weather.temperature}°C'),
+              Text('Descripción: ${weather.description}'),
+            ],
+          ),
+        ),
       ),
-
-    data: (weather) => Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Center(
-          child: Text(weather.city, style: TextStyle(fontSize: 30),)),
-          Text("${weather.temperature} °C", style: TextStyle(fontSize: 30)),
-          Text(weather.description, style: TextStyle(fontSize: 30))
-      ],
-    )
     );
   }
 }
