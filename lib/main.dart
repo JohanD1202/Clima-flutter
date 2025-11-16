@@ -5,6 +5,7 @@ import 'package:weather_app/config/router/app_router.dart';
 import 'package:weather_app/config/theme/app_theme.dart';
 
 Future<void> main() async {
+  //WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
   runApp(ProviderScope(child: const MainApp()));
 }
