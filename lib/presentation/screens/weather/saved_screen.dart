@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:weather_app/presentation/providers/weather/current_location_provider.dart';
 import 'package:weather_app/presentation/providers/weather/weather_by_location_provider.dart';
+import 'package:weather_app/presentation/providers/weather/searched_weather_provider.dart';
 import 'package:weather_app/presentation/widgets/weather/current_location_card.dart';
 import 'package:weather_app/presentation/widgets/shared/custom_appbar.dart';
+import 'package:weather_app/presentation/widgets/weather/location_searched_card.dart';
 
 class SavedScreen extends ConsumerWidget {
   static const name = "saved-screen";
@@ -11,7 +13,6 @@ class SavedScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final coords = ref.watch(currentLocationProvider);
 
     if (coords == null) {
@@ -21,6 +22,7 @@ class SavedScreen extends ConsumerWidget {
     }
 
     final weatherAsync = ref.watch(weatherByLocationProvider(coords));
+    final searchedWeatherList = ref.watch(searchedWeatherProvider);
 
     return Scaffold(
       appBar: const PreferredSize(
@@ -30,12 +32,14 @@ class SavedScreen extends ConsumerWidget {
       body: weatherAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => Center(child: Text("Error: $err")),
-        data: (weather) {
+        data: (currentWeather) {
           return ListView(
+            padding: const EdgeInsets.symmetric(vertical: 10),
             children: [
-              CurrentLocationCard(
-                weatherMain: weather.main,
-                weather: weather,
+              CurrentLocationCard(weather: currentWeather),
+
+              ...searchedWeatherList.map(
+                (weather) => LocationSearchedCard(weather: weather),
               ),
             ],
           );
