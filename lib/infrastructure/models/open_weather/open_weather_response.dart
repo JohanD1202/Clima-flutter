@@ -78,7 +78,6 @@ class OpenWeatherResponse {
       };
 }
 
-// -------------------- Submodelos --------------------
 
 class Clouds {
   final int all;

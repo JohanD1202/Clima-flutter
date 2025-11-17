@@ -9,5 +9,10 @@ final appRouter = GoRouter(
       name: HomeScreen.name,
       builder: (context, state) => const HomeScreen(),
     ),
+    GoRoute(
+      path: '/saved',
+      name: SavedScreen.name,
+      builder: (context, state) => const SavedScreen(),
+    ),
   ]
 );

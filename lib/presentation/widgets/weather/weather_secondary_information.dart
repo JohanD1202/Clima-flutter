@@ -24,7 +24,7 @@ class WeatherSecondaryInformation extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.85),
           borderRadius: BorderRadius.circular(25),
@@ -89,7 +89,7 @@ class _InfoItem extends StatelessWidget {
         Text(
           title,
           style: GoogleFonts.inter(
-            fontSize: 20,
+            fontSize: 12,
             fontWeight: FontWeight.w500,
             color: Colors.black87,
           ),
@@ -98,7 +98,7 @@ class _InfoItem extends StatelessWidget {
         Text(
           value,
           style: GoogleFonts.inter(
-            fontSize: 25,
+            fontSize: 17,
             fontWeight: FontWeight.w500,
             color: Colors.black,
           ),

@@ -26,53 +26,40 @@ class WeatherBackground extends StatelessWidget {
 
     if(main.contains('clear')) {
       return [
-        /*Color(0xFF56CCF2),
-        Color(0xFF2F80ED)*/
         Color.fromARGB(255, 65, 198, 242),
-        Color.fromARGB(255, 74, 160, 188),
         Color.fromARGB(255, 39, 110, 203),
       ];
     }
     if(main.contains('clouds')) {
-      //return [Color(0xFF757F9A), Color(0xFFD7DDE8)];
       return [
         Color.fromARGB(255, 90, 97, 117),
-        Color.fromARGB(255, 137, 148, 179),
-        Color.fromARGB(255, 173, 177, 185),
+        Color.fromARGB(255, 197, 197, 198),
       ];
     }
     if(main.contains('rain')) {
       return [
-        Color.fromARGB(255, 76, 75, 75),
-        Color.fromARGB(255, 122, 125, 126),
-        Color.fromARGB(255, 203, 202, 202),
+        Color.fromARGB(255, 56, 70, 83),
+        Color.fromARGB(255, 137, 137, 172),
       ];
     }
     if(main.contains('thunder') || main.contains('storm')
     || main.contains('thunderstorm')) {
       return [
-        /*Color.fromARGB(255, 142, 25, 184),
-        Color.fromARGB(255, 205, 94, 245),
-        Color.fromARGB(255, 228, 165, 253),*/
-        Color.fromARGB(255, 27, 35, 151),
-        Color.fromARGB(255, 40, 47, 131),
-        Color.fromARGB(255, 57, 68, 164),
-        Color.fromARGB(255, 61, 64, 241),
+        Color.fromARGB(255, 1, 8, 98),
+        Color.fromARGB(255, 92, 92, 197),
+        Color.fromARGB(255, 190, 190, 225),
       ];
     }
     if(main.contains('snow')) {
       return [
-        /*Color(0xFFe6dada),
-        Color(0xFF274046),*/
         Color(0xFFe6dada),
-        Color.fromARGB(255, 96, 96, 116),
-        Color.fromARGB(255, 56, 72, 76),
+        Color.fromARGB(255, 66, 123, 143),
+        Color.fromARGB(255, 43, 78, 86),
       ];
     }
     return [        
       Color.fromARGB(255, 65, 198, 242),
-      Color.fromARGB(255, 74, 160, 188),
-      Color.fromARGB(255, 39, 110, 203),
+        Color.fromARGB(255, 39, 110, 203),
     ];
   }
 

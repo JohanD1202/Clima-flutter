@@ -6,6 +6,8 @@ import 'package:weather_app/config/constants/country_names.dart';
 import 'package:weather_app/domain/entities/weather.dart';
 import 'package:weather_app/infrastructure/services/location/geolocation_service.dart';
 import 'package:weather_app/presentation/providers/weather/weather_by_location_provider.dart';
+import 'package:weather_app/presentation/screens/screens.dart';
+import 'package:weather_app/presentation/widgets/shared/weather_bottom_navigation.dart';
 import 'package:weather_app/presentation/widgets/weather/weather_background.dart';
 import 'package:weather_app/presentation/widgets/weather/weather_secondary_information.dart';
 
@@ -17,7 +19,7 @@ import 'package:weather_app/presentation/widgets/weather/weather_secondary_infor
   humidity: 85,
   windSpeed: 5.0,
   windDeg: 210,
-  main: "rain",
+  main: "",
   date: DateTime.now(),
   country: "Brazil",
   cloudiness: 0,
@@ -25,16 +27,64 @@ import 'package:weather_app/presentation/widgets/weather/weather_secondary_infor
 );*/
 
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
 
   static const name = "home-screen";
 
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  int _selectedIndex = 1;
+  final PageController _pageController = PageController(initialPage: 1);
+
+  @override
+  void initState() {
+    super.initState();
+
+    _pageController.addListener(() {
+      final page = _pageController.page?.round() ?? 0;
+      if (_selectedIndex != page) {
+        setState(() {
+          _selectedIndex = page;
+        });
+      }
+    });
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    _pageController.jumpToPage(index);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: _HomeView(),
+    return Scaffold(
+      body: PageView(
+        controller: _pageController,
+        physics: const BouncingScrollPhysics(),
+        children: const [
+          Placeholder(),
+          _HomeView(),
+          SavedScreen()
+        ],
+      ),
+      bottomNavigationBar: WeatherBottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped
+      ),
     );
   }
 }
@@ -141,34 +191,32 @@ class _WeatherInfo extends StatelessWidget {
           WeatherBackground(weatherMain: weather.main),
           Center(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 50),
-                Text(weather.city, 
+                const SizedBox(height: 290),
+                Text(weather.city,
                 style: GoogleFonts.inter(
-                  fontSize: 38,
-                  fontWeight: FontWeight.w700
+                  fontSize: 32,
+                  fontWeight: FontWeight.w600
                 )),
-                const SizedBox(height: 15),
                 Text(countryFullName, 
                 style: GoogleFonts.inter(
-                  fontSize: 30,
+                  fontSize: 20,
                   fontWeight: FontWeight.w500
                 )),
-                const SizedBox(height: 50),
+                const SizedBox(height: 30),
                 Text('${weather.temperature.toStringAsFixed(1)}°C',
                 style: GoogleFonts.inter(
-                  fontSize: 70,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 50,
+                  fontWeight: FontWeight.w600,
                   height: 0.9,
                 )),
-                const SizedBox(height: 15),
+                const SizedBox(height: 10),
                 Text(weather.description,
                 style:  GoogleFonts.inter(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
                 )),
-                const SizedBox(height: 50),
+                const SizedBox(height: 35),
                 WeatherSecondaryInformation(
                   feelsLike: weather.feelsLike,
                   windSpeed: weather.windSpeed,
@@ -176,8 +224,10 @@ class _WeatherInfo extends StatelessWidget {
                   humidity: weather.humidity,
                   cloudiness: weather.cloudiness,
                   pressure: weather.pressure,
-                )
-              ],
+                ),
+                const SizedBox(height: 30),
+                
+              ]
             ),
           )
         ],
