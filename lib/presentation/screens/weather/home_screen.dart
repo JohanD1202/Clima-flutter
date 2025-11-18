@@ -1,32 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_app/config/constants/country_names.dart';
-import 'package:weather_app/domain/entities/weather.dart';
 import 'package:weather_app/infrastructure/services/location/geolocation_service.dart';
 import 'package:weather_app/presentation/providers/weather/current_location_provider.dart';
 import 'package:weather_app/presentation/providers/weather/weather_by_location_provider.dart';
-import 'package:weather_app/presentation/screens/screens.dart';
-import 'package:weather_app/presentation/widgets/shared/weather_bottom_navigation.dart';
-import 'package:weather_app/presentation/widgets/weather/weather_background.dart';
-import 'package:weather_app/presentation/widgets/weather/weather_secondary_information.dart';
-
-/*final weather2 = Weather(
-  city: "Tuluá",
-  temperature: 18.0,
-  description: "Lluvia ligera",
-  feelsLike: 17.5,
-  humidity: 85,
-  windSpeed: 5.0,
-  windDeg: 210,
-  main: "",
-  date: DateTime.now(),
-  country: "Brazil",
-  cloudiness: 0,
-  pressure: 0
-);*/
-
+import 'package:weather_app/presentation/widgets/weather/weather_info.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -40,53 +18,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  int _selectedIndex = 1;
-  final PageController _pageController = PageController(initialPage: 1);
-
-  @override
-  void initState() {
-    super.initState();
-
-    _pageController.addListener(() {
-      final page = _pageController.page?.round() ?? 0;
-      if (_selectedIndex != page) {
-        setState(() {
-          _selectedIndex = page;
-        });
-      }
-    });
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    _pageController.jumpToPage(index);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        physics: const BouncingScrollPhysics(),
-        children: const [
-          Placeholder(),
-          _HomeView(),
-          SavedScreen()
-        ],
-      ),
-      bottomNavigationBar: WeatherBottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped
-      ),
-    );
+    return const _HomeView();
   }
 }
 
@@ -116,14 +50,14 @@ class _HomeViewState extends ConsumerState<_HomeView> {
         if(mounted) {
           await showDialog(
             context: context,
-            builder: (_) => AlertDialog(
+            builder: (contextDialog) => AlertDialog(
               title: const Text("Permiso de ubicación"),
               content: const Text(
                 "Necesitamos acceder a tu ubicación para mostrar el clima actual.",
               ),
               actions: [
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pop(contextDialog),
                   child: const Text("Aceptar"),
                 )
               ],
@@ -172,67 +106,8 @@ class _HomeViewState extends ConsumerState<_HomeView> {
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, _) => Center(child: Text("Error: $err")),
       data: (weather)  {
-        return _WeatherInfo(weather);
+        return WeatherInfo(weather: weather);
       }
     );
-  }
-}
-
-class _WeatherInfo extends StatelessWidget {
-
-  final Weather weather;
-
-  const _WeatherInfo(this.weather);
-
-  @override
-  Widget build(BuildContext context) {
-
-    final countryFullName = countryNames[weather.country] ?? weather.country;
-
-    return Stack(
-        children: [
-          WeatherBackground(weatherMain: weather.main),
-          Center(
-            child: Column(
-              children: [
-                const SizedBox(height: 290),
-                Text(weather.city,
-                style: GoogleFonts.inter(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w600
-                )),
-                Text(countryFullName, 
-                style: GoogleFonts.inter(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500
-                )),
-                const SizedBox(height: 30),
-                Text('${weather.temperature.toStringAsFixed(1)}°C',
-                style: GoogleFonts.inter(
-                  fontSize: 50,
-                  fontWeight: FontWeight.w600,
-                  height: 0.9,
-                )),
-                const SizedBox(height: 10),
-                Text(weather.description,
-                style:  GoogleFonts.inter(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
-                )),
-                const SizedBox(height: 35),
-                WeatherSecondaryInformation(
-                  feelsLike: weather.feelsLike,
-                  windSpeed: weather.windSpeed,
-                  windDeg: weather.windDeg,
-                  humidity: weather.humidity,
-                  cloudiness: weather.cloudiness,
-                  pressure: weather.pressure,
-                ),
-                const SizedBox(height: 30),               
-              ]
-            ),
-          )
-        ],
-      );
   }
 }

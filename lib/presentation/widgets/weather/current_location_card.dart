@@ -29,6 +29,77 @@ class CurrentLocationCard extends StatelessWidget {
   }
 }
 
+
+class _Card extends StatelessWidget {
+
+  final String weatherMain;
+  final Weather weather;
+
+  const _Card({
+    required this.weatherMain,
+    required this.weather
+  });
+
+  @override
+  Widget build(BuildContext context) {
+
+    final colors = _getColorsForWeather(weatherMain);
+    final countryFullName = countryNames[weather.country] ?? weather.country;
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        gradient: LinearGradient(
+          colors: colors,
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              _ImageCurrentLocationCard(weatherMain),
+              const Spacer(),
+              _InfoCurrentLocationCard(
+                weather.city,
+                countryFullName,
+                weather.description,
+                //weather.temperature
+              )
+            ],
+          ),
+          Row(
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(left: 12),
+                child: Icon(LucideIcons.mapPin, size: 20, color: Colors.lightBlue),
+              ),
+              const SizedBox(width: 5),
+              Text("Mi Ubicación Actual",
+              style: GoogleFonts.inter(
+                fontSize: 15,
+                fontWeight: FontWeight.w500
+              )),
+              Padding(
+                padding: const EdgeInsets.only(left: 20),
+                child: Text('${weather.temperature.toStringAsFixed(1)}°C', style: GoogleFonts.inter(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w600,
+                )),
+              ),
+            ],
+          )
+          
+        ],
+      ),
+    );
+  }
+}
+
+/*
+
 class _Card extends StatelessWidget {
 
   final String weatherMain;
@@ -63,14 +134,14 @@ class _Card extends StatelessWidget {
             weather.city,
             countryFullName,
             weather.description,
-            weather.temperature
+            //weather.temperature
           )
         ],
       ),
     );
   }
 }
-
+*/
 class _ImageCurrentLocationCard extends StatelessWidget {
 
   final String weatherMain;
@@ -82,14 +153,14 @@ class _ImageCurrentLocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 15),
+      padding: const EdgeInsets.only(left: 20),
       child: Column(
         children: [
           SizedBox(
             height: 115,
-            width: 120,
+            width: 110,
             child: _buildSmallLottie(weatherMain),
-          ),
+          ),/*
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -101,7 +172,7 @@ class _ImageCurrentLocationCard extends StatelessWidget {
                 fontWeight: FontWeight.w500
               )),
             ],
-          ),
+          ),*/
         ],
       ),
     );
@@ -113,13 +184,13 @@ class _InfoCurrentLocationCard extends StatelessWidget {
   final String city;
   final String country;
   final String description;
-  final double temperature;
+  //final double temperature;
 
   const _InfoCurrentLocationCard(
     this.city,
     this.country,
     this.description,
-    this.temperature
+    //this.temperature
   );
 
   @override
@@ -143,16 +214,18 @@ class _InfoCurrentLocationCard extends StatelessWidget {
               fontSize: 13,
               fontWeight: FontWeight.w500,
             )),
-            const SizedBox(height: 8),
+            /*const SizedBox(height: 8),
             Text('${temperature.toStringAsFixed(1)}°C', style: GoogleFonts.inter(
               fontSize: 25,
               fontWeight: FontWeight.w600,
-            )),
+            )),*/
         ],
       ),
     );
   }
 }
+
+
 
 class _SmallLottie extends StatelessWidget {
   final String asset;

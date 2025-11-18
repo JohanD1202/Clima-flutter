@@ -1,28 +1,39 @@
+import 'package:flutter/material.dart';
 import 'package:weather_app/domain/entities/weather.dart';
 import 'package:weather_app/presentation/screens/screens.dart';
 import 'package:go_router/go_router.dart';
+import 'package:weather_app/presentation/widgets/shared/weather_bottom_navigation.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/',
   routes: [
-    GoRoute(
-      path: '/',
-      name: HomeScreen.name,
-      builder: (context, state) => const HomeScreen(),
-    ),
-    GoRoute(
-      path: '/saved',
-      name: SavedScreen.name,
-      builder: (context, state) => const SavedScreen(),
-    ),
-    GoRoute(
-      path: '/weather-detail',
-      name: WeatherDetailScreen.name,
-      builder: (context, state) {
-        final weather = state.extra as Weather;
-
-        return WeatherDetailScreen(weather: weather);
+    ShellRoute(
+      builder: (context, state, child) {
+        return Scaffold(
+          body: child,
+          bottomNavigationBar: BottomNavWrapper(state: state),
+        );
       },
-    ),
-  ]
+      routes: [
+        GoRoute(
+          path: '/',
+          name: HomeScreen.name,
+          builder: (context, state) => const HomeScreen(),
+        ),
+        GoRoute(
+          path: '/saved',
+          name: SavedScreen.name,
+          builder: (context, state) => const SavedScreen(),
+        ),
+        GoRoute(
+          path: '/weather-detail',
+          name: WeatherDetailScreen.name,
+          builder: (context, state) {
+            final weather = state.extra as Weather;
+            return WeatherDetailScreen(weather: weather);
+          },
+        ),
+      ],
+    )
+  ],
 );
+

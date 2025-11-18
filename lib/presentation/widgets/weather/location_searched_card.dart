@@ -92,10 +92,16 @@ class _InfoLocationCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(city, style: GoogleFonts.inter(
-            fontSize: 15,
-            fontWeight: FontWeight.w600
-          )),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.45,
+            child: Text(city, style: GoogleFonts.inter(
+              fontSize: 15,
+              fontWeight: FontWeight.w600
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
           const SizedBox(height: 10),
           Text(country, style: GoogleFonts.inter(
             fontSize: 10,
@@ -131,7 +137,7 @@ class _InfoTemperature extends StatelessWidget {
           const SizedBox(height: 5),
           SizedBox(
             width: 100,
-            child: Text(description, style:  GoogleFonts.inter(
+            child: Text(description, style: GoogleFonts.inter(
               fontSize: 10,
               fontWeight: FontWeight.w500,
             ),
