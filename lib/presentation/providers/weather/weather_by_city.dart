@@ -6,7 +6,7 @@ import 'package:weather_app/presentation/providers/weather/weather_repository_pr
 class WeatherByCityNotifier extends AsyncNotifier<Weather?> {
   @override
   FutureOr<Weather?> build() {
-    return null; // El inicio: sin ciudad buscada
+    return null;
   }
 
   Future<void> search(String city) async {
@@ -18,8 +18,8 @@ class WeatherByCityNotifier extends AsyncNotifier<Weather?> {
       final repo = ref.read(weatherRepositoryProvider);
       final weather = await repo.getCurrentWeatherByCity(city);
       state = AsyncData(weather);
-    } catch (e, st) {
-      state = AsyncError(e, st);
+    } catch (e) {
+      state = const AsyncData(null);
     }
   }
 }

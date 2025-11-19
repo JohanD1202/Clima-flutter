@@ -1,3 +1,4 @@
+import 'package:weather_app/domain/entities/city.dart';
 import 'package:weather_app/domain/entities/weather.dart';
 
 abstract class WeathersDatasource {
@@ -7,4 +8,6 @@ abstract class WeathersDatasource {
     required double lat,
     required double lon,
   });
+
+  Future<List<City>> searchCities(String query);
 }

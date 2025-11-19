@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:weather_app/presentation/providers/suggestions/search_query_provider.dart';
 import 'package:weather_app/presentation/providers/weather/weather_by_city.dart';
 import 'package:weather_app/presentation/providers/weather/searched_weather_provider.dart';
 
@@ -9,21 +10,25 @@ class CustomAppbar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SafeArea(
+    return const SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-        child: Row(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+        child: Column(
           children: [
-            const Expanded(
-              child: SizedBox(
-                height: 50,
-                child: _TextField(),
-              ),
-            ),
-            const SizedBox(width: 20),
-            const Icon(
-              LucideIcons.refreshCcw,
-              color: Colors.black,
+            Row(
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    height: 50,
+                    child: _TextField(),
+                  ),
+                ),
+                SizedBox(width: 20),
+                Icon(
+                  LucideIcons.refreshCcw,
+                  color: Colors.black,
+                ),
+              ],
             ),
           ],
         ),
@@ -35,9 +40,39 @@ class CustomAppbar extends ConsumerWidget {
 class _TextField extends ConsumerWidget {
   const _TextField();
 
+  void _onQueryChanged(String value, WidgetRef ref) {
+    ref.read(searchQueryProvider.notifier).state = value;
+  }
+
+  Future<void> _onSubmitted(
+    String value,
+    WidgetRef ref,
+    BuildContext context
+  ) async {
+    final query = value.trim();
+    if(query.isEmpty) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+
+    try {
+      await ref.read(weatherByCityProvider.notifier).search(query);
+      final weather = ref.read(weatherByCityProvider).value;
+      if(weather == null) throw Exception();
+      
+      ref.read(searchedWeatherProvider.notifier).update(
+        (state) => [...state, weather]
+      );
+    } catch(e) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text("Ciudad no encontrada"))
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return TextField(
+      onChanged: (value) => _onQueryChanged(value, ref),
       style: const TextStyle(color: Colors.black),
       textInputAction: TextInputAction.search,
       decoration: InputDecoration(
@@ -60,52 +95,7 @@ class _TextField extends ConsumerWidget {
       ),
       contentPadding: const EdgeInsets.symmetric(vertical: 10),
     ),
-    onSubmitted:(value) async {
-      final query = value.trim();
-      if(query.isEmpty) return;
-
-      final messenger = ScaffoldMessenger.of(context);
-
-      try {
-        await ref.read(weatherByCityProvider.notifier).search(query);
-
-        final weather = ref.read(weatherByCityProvider).value;
-        if(weather == null) throw Exception("Ciudad no encontrada");
-
-        ref.read(searchedWeatherProvider.notifier).update(
-          (state) => [...state, weather],
-        );
-      } catch (e) {
-        messenger.showSnackBar(
-          const SnackBar(content: Text("Ciudad no encontrada")),
-        );
-      }
-    },
+    onSubmitted:(value) => _onSubmitted(value, ref, context)
     );
   }
 }
-
-/*
-GestureDetector(
-              onTap: () async {
-                final lastState = ref.read(weatherByCityProvider);
-                final lastCity = lastState.value?.city;
-
-                if(lastCity != null) {
-                  try {
-                    await ref.read(weatherByCityProvider.notifier).search(lastCity);
-                    final weather = ref.read(weatherByCityProvider).value;
-                    if (weather != null) {
-                      ref.read(searchedWeatherProvider.notifier).update(
-                        (state) => [...state, weather],
-                      );
-                    }
-                  } catch (_) {}
-                }
-              },
-              child: const Icon(
-                LucideIcons.refreshCcw,
-                color: Colors.black,
-              ),
-            ),
-            */

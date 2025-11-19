@@ -1,4 +1,5 @@
 import 'package:weather_app/domain/datasources/weathers_datasource.dart';
+import 'package:weather_app/domain/entities/city.dart';
 import 'package:weather_app/domain/entities/weather.dart';
 import 'package:weather_app/domain/repositories/weathers_repository.dart';
 
@@ -18,5 +19,10 @@ class OpenWeatherRepositoryImpl extends WeathersRepository {
     required double lon,
   }) {
     return datasource.getCurrentWeatherByLocation(lat: lat, lon: lon);
+  }
+
+  @override
+  Future<List<City>> searchCities(String query) {
+    return datasource.searchCities(query);
   }
 }
