@@ -4,6 +4,7 @@ import 'package:weather_app/config/constants/country_names.dart';
 import 'package:weather_app/presentation/providers/suggestions/city_suggestion_provider.dart';
 import 'package:weather_app/presentation/providers/suggestions/search_query_provider.dart';
 import 'package:weather_app/presentation/providers/weather/current_location_provider.dart';
+import 'package:weather_app/presentation/providers/weather/is_refreshing_provider.dart';
 import 'package:weather_app/presentation/providers/weather/weather_by_city.dart';
 import 'package:weather_app/presentation/providers/weather/weather_by_location_provider.dart';
 import 'package:weather_app/presentation/providers/weather/searched_weather_provider.dart';
@@ -11,31 +12,42 @@ import 'package:weather_app/presentation/widgets/weather/current_location_card.d
 import 'package:weather_app/presentation/widgets/shared/custom_appbar.dart';
 import 'package:weather_app/presentation/widgets/weather/location_searched_card.dart';
 
-class SavedScreen extends ConsumerWidget {
+class SavedScreen extends StatelessWidget {
   static const name = "saved-screen";
   const SavedScreen({super.key});
 
   @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(95),
+        child: CustomAppbar(),
+      ),
+      body: _BodySavedScreen()
+    );
+  }
+}
+
+class _BodySavedScreen extends ConsumerWidget {
+  const _BodySavedScreen();
+
+  @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     final coords = ref.watch(currentLocationProvider);
 
-    if (coords == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+    if(coords == null) {
+      return const Center(child: CircularProgressIndicator());
     }
 
     final weatherAsync = ref.watch(weatherByLocationProvider(coords));
     final searchedWeatherList = ref.watch(searchedWeatherProvider);
     final query = ref.watch(searchQueryProvider);
     final suggestionsAsync = ref.watch(citySuggestionProvider(query));
+    final isRefreshing = ref.watch(isRefreshingProvider);
 
-    return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize: Size.fromHeight(95),
-        child: CustomAppbar(),
-      ),
-      body: Column(
+    
+    return Column(
         children: [
           suggestionsAsync.when(
             data: (cities) {
@@ -64,24 +76,35 @@ class SavedScreen extends ConsumerWidget {
                       title: Text("${city.name}, $countryFullName"),
                       subtitle: city.state != null
                           ? Text(city.state!)
-                          : null,
+                          : const Text(""),
                       onTap: () async {
+                        final messenger = ScaffoldMessenger.of(context);
                         FocusScope.of(context).unfocus();
-                        // Buscar clima de la ciudad seleccionada
-                        await ref
-                          .read(weatherByCityProvider.notifier)
-                          .search(city.name);
-                        final weather = ref.read(weatherByCityProvider).value;
-                        if(weather != null) {
-                          ref
-                            .read(searchedWeatherProvider.notifier)
-                            .update((state) => [...state, weather]);
+
+                        final cityNameNormalized = city.name.trim().toLowerCase();
+                        final countryNormalized = city.country.trim().toLowerCase();
+
+                        final existingList = ref.read(searchedWeatherProvider);
+                        final exists = existingList.any(
+                          (w) =>
+                              w.city.trim().toLowerCase() == cityNameNormalized &&
+                              w.country.trim().toLowerCase() == countryNormalized,
+                        );
+
+                        if (exists) {
+                          messenger.showSnackBar(
+                            const SnackBar(content: Text("La ciudad ya está en la lista")),
+                          );
+                          ref.read(searchQueryProvider.notifier).state = '';
+                          return; // salir antes de hacer la búsqueda
                         }
 
-                        // Guardar el nombre en el TextField
-                        ref.read(searchQueryProvider.notifier).state = city.name;
+                        await ref.read(weatherByCityProvider.notifier).search(city.name);
+                        final weather = ref.read(weatherByCityProvider).value;
+                        if (weather != null) {
+                          ref.read(searchedWeatherProvider.notifier).addWeather(weather);
+                        }
 
-                        // Ocultar sugerencias
                         ref.read(searchQueryProvider.notifier).state = '';
                       },
                     );
@@ -104,7 +127,13 @@ class SavedScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   children: [
                     CurrentLocationCard(weather: currentWeather),
-            
+                    if(isRefreshing) const Padding(
+                      padding: EdgeInsets.all(40),
+                      child: Center(
+                        child: CircularProgressIndicator()
+                      ),
+                    )
+                    else
                     ...searchedWeatherList.map(
                       (weather) => LocationSearchedCard(weather: weather),
                     ),
@@ -114,7 +143,6 @@ class SavedScreen extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 }

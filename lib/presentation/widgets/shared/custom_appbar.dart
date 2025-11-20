@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:weather_app/presentation/providers/suggestions/search_query_provider.dart';
+import 'package:weather_app/presentation/providers/weather/is_refreshing_provider.dart';
 import 'package:weather_app/presentation/providers/weather/weather_by_city.dart';
 import 'package:weather_app/presentation/providers/weather/searched_weather_provider.dart';
 
@@ -10,23 +11,29 @@ class CustomAppbar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const SafeArea(
+
+    return SafeArea(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
         child: Column(
           children: [
             Row(
               children: [
-                Expanded(
+                const Expanded(
                   child: SizedBox(
                     height: 50,
                     child: _TextField(),
                   ),
                 ),
-                SizedBox(width: 20),
-                Icon(
-                  LucideIcons.refreshCcw,
+                const SizedBox(width: 20),
+                IconButton(
+                  icon: const Icon(LucideIcons.refreshCcw),
                   color: Colors.black,
+                  onPressed: () async {
+                    ref.read(isRefreshingProvider.notifier).state = true;
+                    await ref.read(searchedWeatherProvider.notifier).refresh(ref);
+                    ref.read(isRefreshingProvider.notifier).state = false;
+                  },
                 ),
               ],
             ),
@@ -47,27 +54,46 @@ class _TextField extends ConsumerWidget {
   Future<void> _onSubmitted(
     String value,
     WidgetRef ref,
-    BuildContext context
+    BuildContext context,
   ) async {
     final query = value.trim();
-    if(query.isEmpty) return;
-
+    if (query.isEmpty) return;
+  
     final messenger = ScaffoldMessenger.of(context);
-
+  
     try {
+      // Buscar el clima de la ciudad
       await ref.read(weatherByCityProvider.notifier).search(query);
       final weather = ref.read(weatherByCityProvider).value;
-      if(weather == null) throw Exception();
-      
-      ref.read(searchedWeatherProvider.notifier).update(
-        (state) => [...state, weather]
+      if (weather == null) throw Exception();
+  
+      // Verificar duplicados por ciudad + país
+      final existingList = ref.read(searchedWeatherProvider);
+      final exists = existingList.any(
+        (w) =>
+            w.city.trim().toLowerCase() == weather.city.trim().toLowerCase() &&
+            w.country.trim().toLowerCase() == weather.country.trim().toLowerCase(),
       );
-    } catch(e) {
+  
+      if (exists) {
+        messenger.showSnackBar(
+          const SnackBar(content: Text("La ciudad ya está en la lista")),
+        );
+        return;
+      }
+  
+      // Agregar la ciudad
+      ref.read(searchedWeatherProvider.notifier).addWeather(weather);
+    } catch (e) {
       messenger.showSnackBar(
-        const SnackBar(content: Text("Ciudad no encontrada"))
+        const SnackBar(content: Text("Ciudad no encontrada")),
       );
     }
   }
+
+
+
+
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

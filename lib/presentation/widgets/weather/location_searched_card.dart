@@ -1,34 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/config/constants/country_names.dart';
 import 'package:weather_app/domain/entities/weather.dart';
+import 'package:weather_app/presentation/providers/weather/searched_weather_provider.dart';
 
-class LocationSearchedCard extends StatelessWidget {
-
+class LocationSearchedCard extends ConsumerWidget {
   final Weather weather;
 
   const LocationSearchedCard({
     super.key,
-    required this.weather
+    required this.weather,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 0, 15, 10),
-      child: SizedBox(
-        height: 90,
+      child: Dismissible(
+        key: ValueKey(weather.city + weather.country),
+        direction: DismissDirection.endToStart,
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 20),
+          color: Colors.red,
+          child: const Icon(Icons.delete, color: Colors.white),
+        ),
+        onDismissed: (_) {
+          ref.read(searchedWeatherProvider.notifier).removeWeather(weather);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('${weather.city} eliminada')),
+          );
+        },
         child: GestureDetector(
           onTap: () => context.push(
             '/weather-detail',
-            extra: weather
+            extra: weather,
           ),
           child: _Card(
             weatherMain: weather.main,
             weather: weather,
           ),
-        )
+        ),
       ),
     );
   }
@@ -88,7 +102,7 @@ class _InfoLocationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 20, top: 12),
+      padding: const EdgeInsets.only(left: 20, top: 12, bottom: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
