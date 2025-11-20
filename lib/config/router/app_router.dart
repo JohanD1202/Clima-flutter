@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:weather_app/domain/entities/weather.dart';
 import 'package:weather_app/presentation/screens/screens.dart';
 import 'package:go_router/go_router.dart';
+import 'package:weather_app/presentation/screens/weather/favorites_screen.dart';
 import 'package:weather_app/presentation/widgets/shared/weather_bottom_navigation.dart';
 
 final appRouter = GoRouter(
@@ -32,6 +33,13 @@ final appRouter = GoRouter(
             return WeatherDetailScreen(weather: weather);
           },
         ),
+        GoRoute(
+          path: '/favorites',
+          name: FavoritesScreen.name,
+          builder: (context, state) {
+            return const FavoritesScreen();
+          }
+        )
       ],
     )
   ],

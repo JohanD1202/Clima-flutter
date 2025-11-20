@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:weather_app/domain/entities/weather.dart';
+import 'package:weather_app/infrastructure/services/shared_preferences/shared_preferences.dart';
 import 'package:weather_app/presentation/widgets/weather/weather_info.dart';
 
-class WeatherDetailScreen extends StatelessWidget {
+class WeatherDetailScreen extends StatefulWidget {
 
   static const name = 'weather-detail-screen';
   final Weather weather;
@@ -15,6 +16,35 @@ class WeatherDetailScreen extends StatelessWidget {
   });
 
   @override
+  State<WeatherDetailScreen> createState() => _WeatherDetailScreenState();
+}
+
+class _WeatherDetailScreenState extends State<WeatherDetailScreen> {
+
+  bool isFavorite = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavorite();
+  }
+
+  void _loadFavorite() async {
+    final favorites = await getFavorites();
+    setState(() {
+      isFavorite = favorites.contains(widget.weather.city);
+    });
+  }
+
+  void _toggleFavorite() async {
+    await toggleFavorite(widget.weather.city);
+    final favorites = await getFavorites();
+    setState(() {
+      isFavorite = favorites.contains(widget.weather.city);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -23,7 +53,7 @@ class WeatherDetailScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: Padding(
-          padding: const EdgeInsets.only(left: 5),
+          padding: const EdgeInsets.only(left: 15),
           child: GestureDetector(
             child: const Icon(
               LucideIcons.arrowLeft,
@@ -33,8 +63,19 @@ class WeatherDetailScreen extends StatelessWidget {
             onTap: () => context.pop(),
           ),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: IconButton(
+              icon: Icon(isFavorite ? Icons.star : Icons.star_border),
+              color: const Color.fromARGB(255, 255, 230, 0),
+              iconSize: 30,
+              onPressed: _toggleFavorite,
+            ),
+          )
+        ]   
       ),
-      body: WeatherInfo(weather: weather),
+      body: WeatherInfo(weather: widget.weather),
     );
   }
 }

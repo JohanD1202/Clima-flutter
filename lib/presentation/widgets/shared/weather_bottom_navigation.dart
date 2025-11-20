@@ -13,6 +13,7 @@ class BottomNavWrapper extends StatelessWidget {
   int _getCurrentIndex() {
     final location = state.uri.toString();
 
+    if(location == '/favorites') return 0;
     if(location == '/') return 1;
     if(location == '/saved') return 2;
 
@@ -26,8 +27,8 @@ class BottomNavWrapper extends StatelessWidget {
       onTap: (index) {
         switch (index) {
           case 0:
+            context.go('/favorites');
             break;
-
           case 1:
             context.go('/');
             break;
@@ -66,7 +67,7 @@ class _WeatherBottomNavigationBar extends StatelessWidget {
         onTap: onTap,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(LucideIcons.settings),
+            icon: Icon(LucideIcons.star),
             label: '',
           ),
           BottomNavigationBarItem(
