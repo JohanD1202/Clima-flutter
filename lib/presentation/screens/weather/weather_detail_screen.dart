@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:weather_app/domain/entities/weather.dart';
-import 'package:weather_app/infrastructure/services/shared_preferences/shared_preferences.dart';
+import 'package:weather_app/infrastructure/services/shared_preferences/favorites_provider.dart.dart';
 import 'package:weather_app/presentation/widgets/weather/weather_info.dart';
 
-class WeatherDetailScreen extends StatefulWidget {
+class WeatherDetailScreen extends ConsumerStatefulWidget {
 
   static const name = 'weather-detail-screen';
   final Weather weather;
@@ -16,12 +17,12 @@ class WeatherDetailScreen extends StatefulWidget {
   });
 
   @override
-  State<WeatherDetailScreen> createState() => _WeatherDetailScreenState();
+  ConsumerState<WeatherDetailScreen> createState() => _WeatherDetailScreenState();
 }
 
-class _WeatherDetailScreenState extends State<WeatherDetailScreen> {
+class _WeatherDetailScreenState extends ConsumerState<WeatherDetailScreen> {
 
-  bool isFavorite = false;
+  /*bool isFavorite = false;
 
   @override
   void initState() {
@@ -42,10 +43,14 @@ class _WeatherDetailScreenState extends State<WeatherDetailScreen> {
     setState(() {
       isFavorite = favorites.any((w) => w.city == widget.weather.city);
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
+
+    final favorites = ref.watch(favoritesProvider);
+    final isFavorite = favorites.any((w) => w.city == widget.weather.city);
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.transparent,
@@ -70,7 +75,11 @@ class _WeatherDetailScreenState extends State<WeatherDetailScreen> {
               icon: Icon(isFavorite ? Icons.star : Icons.star_border),
               color: const Color.fromARGB(255, 255, 230, 0),
               iconSize: 30,
-              onPressed: _toggleFavorite,
+              onPressed: () {
+                ref
+                  .read(favoritesProvider.notifier)
+                  .toggle(widget.weather);
+              }
             ),
           )
         ]   
