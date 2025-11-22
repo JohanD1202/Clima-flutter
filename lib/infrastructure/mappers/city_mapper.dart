@@ -1,5 +1,5 @@
-import 'package:weather_app/domain/entities/city.dart';
-import 'package:weather_app/infrastructure/models/open_weather/city_model_response.dart';
+import '/infrastructure/infrastructure.dart';
+import '/domain/domain.dart';
 
 class CityMapper {
   static City cityModelToEntity(CityModelResponse openWeatherCity) => City(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:weather_app/presentation/widgets/widgets.dart';
+import '/presentation/widgets/widgets.dart';
 
 class WeatherBackground extends StatelessWidget {
   final String weatherMain;

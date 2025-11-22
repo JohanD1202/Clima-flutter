@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:weather_app/domain/entities/weather.dart';
-import 'package:weather_app/presentation/providers/weather/weather_repository_provider.dart';
+import '/domain/domain.dart';
+import '/presentation/providers/providers.dart';
+
 
 class WeatherByCityNotifier extends AsyncNotifier<Weather?> {
   @override

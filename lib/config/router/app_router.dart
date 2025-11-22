@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/domain/entities/weather.dart';
-import 'package:weather_app/presentation/screens/screens.dart';
 import 'package:go_router/go_router.dart';
+import 'package:weather_app/presentation/screens/screens.dart';
 import 'package:weather_app/presentation/widgets/shared/weather_bottom_navigation.dart';
+import '/domain/domain.dart';
 
 final appRouter = GoRouter(
   routes: [

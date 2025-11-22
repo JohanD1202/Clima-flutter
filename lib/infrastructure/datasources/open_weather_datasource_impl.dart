@@ -1,12 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:weather_app/config/constants/environment.dart';
-import 'package:weather_app/domain/datasources/weathers_datasource.dart';
-import 'package:weather_app/domain/entities/city.dart';
-import 'package:weather_app/domain/entities/weather.dart';
-import 'package:weather_app/infrastructure/mappers/city_mapper.dart';
-import 'package:weather_app/infrastructure/mappers/weather_mapper.dart';
-import 'package:weather_app/infrastructure/models/open_weather/city_model_response.dart';
-import 'package:weather_app/infrastructure/models/open_weather/open_weather_response.dart';
+import 'package:weather_app/infrastructure/infrastructure.dart';
+import '/domain/domain.dart';
 
 class OpenWeatherDatasourceImpl extends WeathersDatasource {
   final dio = Dio(BaseOptions(
@@ -42,6 +37,18 @@ class OpenWeatherDatasourceImpl extends WeathersDatasource {
       'lon': lon,
     });
     return _jsonToWeather(response.data);
+  }
+
+  @override
+  Future<Weather> getWeatherById(int id) async {
+    final resp = await dio.get(
+      "/weather",
+      queryParameters: {
+        "id": id,
+      },
+    );
+  final parsed = OpenWeatherResponse.fromJson(resp.data);
+  return WeatherMapper.openWeatherToEntity(parsed);
   }
 
   @override

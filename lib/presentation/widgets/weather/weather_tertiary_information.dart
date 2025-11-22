@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:weather_app/presentation/widgets/shared/info_item.dart';
-import 'package:weather_app/presentation/widgets/shared/localized_text.dart';
-import 'package:weather_app/presentation/widgets/shared/temperature_text.dart';
+import '/presentation/widgets/widgets.dart';
+
 
 class WeatherTertiaryInformation extends StatelessWidget {
 

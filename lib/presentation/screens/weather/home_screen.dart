@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:weather_app/infrastructure/services/location/geolocation_service.dart';
-import 'package:weather_app/presentation/providers/weather/current_location_provider.dart';
-import 'package:weather_app/presentation/providers/weather/weather_by_location_provider.dart';
-import 'package:weather_app/presentation/widgets/weather/weather_info.dart';
+import '/infrastructure/services/services.dart';
+import '/presentation/widgets/widgets.dart';
+import '/presentation/providers/providers.dart';
 
 class HomeScreen extends StatefulWidget {
 

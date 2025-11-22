@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weather_app/domain/entities/weather.dart';
+import 'package:weather_app/presentation/screens/weather/weather_detail_screen.dart';
+import '/domain/domain.dart';
+
 
 class FavoritesNotifier extends StateNotifier<List<Weather>> {
   FavoritesNotifier() : super([]) {
@@ -17,20 +19,30 @@ class FavoritesNotifier extends StateNotifier<List<Weather>> {
   }
 
   Future<void> toggle(Weather weather) async {
-    final prefs = await SharedPreferences.getInstance();
-    final jsonList = prefs.getStringList('favorites') ?? [];
+  final prefs = await SharedPreferences.getInstance();
+  final jsonList = prefs.getStringList('favorites') ?? [];
 
-    final encoded = jsonEncode(weather.toJson());
+  final currentList = jsonList
+      .map((e) => Weather.fromJson(jsonDecode(e)))
+      .toList();
 
-    if (jsonList.contains(encoded)) {
-      jsonList.remove(encoded);
-    } else {
-      jsonList.add(encoded);
-    }
+  final id = weather.uniqueId;
 
-    await prefs.setStringList('favorites', jsonList);
-    await _loadFavorites();
+  final exists = currentList.any((w) => w.uniqueId == id);
+
+  List<Weather> updated;
+
+  if(exists) {
+    updated = currentList.where((w) => w.uniqueId != id).toList();
+  } else {
+    updated = [...currentList, weather];
   }
+
+  final newJsonList = updated.map((w) => jsonEncode(w.toJson())).toList();
+  await prefs.setStringList('favorites', newJsonList);
+  state = updated;
+}
+
 
   Future<void> refresh() async {
     await _loadFavorites();

@@ -1,4 +1,4 @@
-import 'weather_open_weather.dart';
+import '/infrastructure/infrastructure.dart';
 
 class OpenWeatherResponse {
   final Coord coord;

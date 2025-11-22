@@ -1,10 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:weather_app/domain/entities/weather.dart';
-import 'package:weather_app/infrastructure/services/shared_preferences/favorites_provider.dart';
-import 'package:weather_app/presentation/widgets/weather/weather_info.dart';
+import '/domain/domain.dart';
+import '/infrastructure/services/services.dart';
+import '/presentation/widgets/widgets.dart';
+
 
 class WeatherDetailScreen extends ConsumerStatefulWidget {
 
@@ -22,34 +23,11 @@ class WeatherDetailScreen extends ConsumerStatefulWidget {
 
 class _WeatherDetailScreenState extends ConsumerState<WeatherDetailScreen> {
 
-  /*bool isFavorite = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadFavorite();
-  }
-
-  void _loadFavorite() async {
-    final favorites = await getFavorites();
-    setState(() {
-      isFavorite = favorites.any((w) => w.city == widget.weather.city);
-    });
-  }
-
-  void _toggleFavorite() async {
-    await toggleFavorite(widget.weather); // objeto completo
-    final favorites = await getFavorites();
-    setState(() {
-      isFavorite = favorites.any((w) => w.city == widget.weather.city);
-    });
-  }*/
-
   @override
   Widget build(BuildContext context) {
 
     final favorites = ref.watch(favoritesProvider);
-    final isFavorite = favorites.any((w) => w.city == widget.weather.city);
+    final isFavorite = favorites.any((w) => w.uniqueId == widget.weather.uniqueId);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -87,4 +65,7 @@ class _WeatherDetailScreenState extends ConsumerState<WeatherDetailScreen> {
       body: WeatherInfo(weather: widget.weather),
     );
   }
+}
+extension WeatherX on Weather {
+  String get uniqueId => id.toString();
 }

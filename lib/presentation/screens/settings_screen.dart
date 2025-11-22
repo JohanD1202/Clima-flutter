@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:weather_app/infrastructure/services/shared_preferences/language_provider.dart';
-import 'package:weather_app/infrastructure/services/shared_preferences/theme_notifier_provider.dart';
-import 'package:weather_app/infrastructure/services/shared_preferences/unit_provider.dart';
-import 'package:weather_app/presentation/widgets/shared/localized_text.dart';
+import '/infrastructure/infrastructure.dart';
+import '/presentation/widgets/widgets.dart';
 
 class SettingsScreen extends StatelessWidget {
 

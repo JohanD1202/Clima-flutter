@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:weather_app/config/constants/country_names.dart';
-import 'package:weather_app/config/constants/weather_descriptions.dart';
-import 'package:weather_app/domain/entities/weather.dart';
-import 'package:weather_app/presentation/widgets/shared/localized_text.dart';
-import 'package:weather_app/presentation/widgets/shared/temperature_text.dart';
+import '/config/config.dart';
+import '/domain/domain.dart';
+import '/presentation/widgets/widgets.dart';
 
 class CurrentLocationCard extends StatelessWidget {
 

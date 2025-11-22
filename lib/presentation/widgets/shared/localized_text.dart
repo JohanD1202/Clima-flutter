@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_app/infrastructure/services/shared_preferences/language_provider.dart';
+import '/infrastructure/services/services.dart';
 
 class LocalizedText extends ConsumerWidget {
   final Map<String, String> translations;

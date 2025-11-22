@@ -3,12 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:weather_app/config/constants/country_names.dart';
-import 'package:weather_app/config/constants/weather_descriptions.dart';
-import 'package:weather_app/domain/entities/weather.dart';
-import 'package:weather_app/infrastructure/services/shared_preferences/favorites_provider.dart';
-import 'package:weather_app/presentation/widgets/shared/localized_text.dart';
-import 'package:weather_app/presentation/widgets/shared/temperature_text.dart';
+import '/infrastructure/services/services.dart';
+import '/presentation/widgets/widgets.dart';
+import '/domain/domain.dart';
+import '/config/config.dart';
+
 
 class FavoritesScreen extends ConsumerWidget {
 

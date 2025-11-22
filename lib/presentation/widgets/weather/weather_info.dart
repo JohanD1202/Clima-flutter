@@ -3,12 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:weather_app/config/constants/country_names.dart';
 import 'package:weather_app/config/constants/weather_descriptions.dart';
 import 'package:weather_app/domain/entities/weather.dart';
-import 'package:weather_app/presentation/widgets/shared/localized_text.dart';
-import 'package:weather_app/presentation/widgets/shared/temperature_text.dart';
-import 'package:weather_app/presentation/widgets/weather/weather_background.dart';
-import 'package:weather_app/presentation/widgets/weather/weather_clock.dart';
-import 'package:weather_app/presentation/widgets/weather/weather_secondary_information.dart';
-import 'package:weather_app/presentation/widgets/weather/weather_tertiary_information.dart';
+import '/presentation/widgets/widgets.dart';
 
 class WeatherInfo extends StatelessWidget {
 

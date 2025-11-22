@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:weather_app/config/router/app_router.dart';
-import 'package:weather_app/config/theme/app_theme.dart';
-import 'package:weather_app/infrastructure/services/shared_preferences/theme_notifier_provider.dart';
+import '/config/config.dart';
+import '/infrastructure/services/services.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");

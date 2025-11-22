@@ -1,11 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:weather_app/domain/entities/city.dart';
-import 'package:weather_app/presentation/providers/weather/weather_repository_provider.dart';
+import '/domain/domain.dart';
+import '/presentation/providers/providers.dart';
 
 final citySuggestionProvider = FutureProvider.family<List<City>, String>((ref, query) async {
 
-  // Si está vacío, no buscamos nada
-  if (query.trim().isEmpty) return [];
+  if(query.trim().isEmpty) return [];
 
   final repository = ref.read(weatherRepositoryProvider);
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class ThemeNotifier extends StateNotifier<ThemeMode> {
   static const _key = "theme_mode";
 

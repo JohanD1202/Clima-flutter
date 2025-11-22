@@ -1,5 +1,13 @@
-export 'package:weather_app/presentation/widgets/shared/custom_appbar.dart';
-export 'package:weather_app/presentation/widgets/shared/weather_bottom_navigation.dart';
+export '/presentation/widgets/shared/custom_appbar.dart';
+export '/presentation/widgets/shared/info_item.dart';
+export '/presentation/widgets/shared/localized_text.dart';
+export '/presentation/widgets/shared/suggestions_list.dart';
+export '/presentation/widgets/shared/temperature_text.dart';
+export '/presentation/widgets/shared/weather_bottom_navigation.dart';
+export '/presentation/widgets/shared/weather_list.dart';
+export '/presentation/widgets/weather/weather_clock.dart';
+export '/presentation/widgets/weather/weather_info.dart';
+export '/presentation/widgets/weather/weather_tertiary_information.dart';
 export 'weather/current_location_card.dart';
 export 'weather/location_searched_card.dart';
 export 'weather/weather_background.dart';

@@ -1,5 +1,5 @@
-import 'package:weather_app/domain/entities/weather.dart';
-import 'package:weather_app/infrastructure/models/open_weather/open_weather_response.dart';
+import '/infrastructure/infrastructure.dart';
+import '/domain/domain.dart';
 
 class WeatherMapper {
   static Weather openWeatherToEntity(OpenWeatherResponse openWeather) => Weather(
@@ -28,6 +28,7 @@ class WeatherMapper {
     sunset: openWeather.sys.sunset,
     windGust: openWeather.wind.gust ?? 0.0,
     lat: openWeather.coord.lat,
-    lon: openWeather.coord.lon
+    lon: openWeather.coord.lon,
+    id: openWeather.id
   );
 }

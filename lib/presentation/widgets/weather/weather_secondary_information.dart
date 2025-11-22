@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:weather_app/infrastructure/services/shared_preferences/language_provider.dart';
-import 'package:weather_app/presentation/widgets/shared/info_item.dart';
-import 'package:weather_app/presentation/widgets/shared/localized_text.dart';
-import 'package:weather_app/presentation/widgets/shared/temperature_text.dart';
+import '/infrastructure/services/services.dart';
+import '/presentation/widgets/widgets.dart';
+
 
 class WeatherSecondaryInformation extends ConsumerWidget {
   final double feelsLike;

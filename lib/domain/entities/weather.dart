@@ -19,6 +19,7 @@ class Weather {
   final double windGust;
   final double lat;
   final double lon;
+  final int id;
 
   const Weather({
     required this.city,
@@ -40,7 +41,8 @@ class Weather {
     required this.sunset,
     required this.windGust,
     required this.lat,
-    required this.lon
+    required this.lon,
+    required this.id
   });
 
   Weather copyWith({
@@ -64,6 +66,7 @@ class Weather {
     double? windGust,
     double? lat,
     double? lon,
+    int? id
   }) {
     return Weather(
       city: city ?? this.city,
@@ -86,6 +89,7 @@ class Weather {
       windGust: windGust ?? this.windGust,
       lat: lat ?? this.lat,
       lon: lon ?? this.lon,
+      id: id ?? this.id
     );
   }
 
@@ -109,7 +113,8 @@ class Weather {
     'sunset' : sunset,
     'windGust' : windGust,
     'lat' : lat,
-    'lon' : lon
+    'lon' : lon,
+    'id' : id
   };
 
   factory Weather.fromJson(Map<String, dynamic> json) => Weather(
@@ -132,6 +137,7 @@ class Weather {
     sunset: json['sunset'] ?? 0,
     windGust: (json['windGust'] ?? json['wind_gust'] ?? 0).toDouble(),
     lat: json['lat'],
-    lon: json['lon']
+    lon: json['lon'],
+    id: json['id']
   );
 }

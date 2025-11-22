@@ -1,5 +1,4 @@
-import 'package:weather_app/domain/entities/city.dart';
-import 'package:weather_app/domain/entities/weather.dart';
+import '/domain/domain.dart';
 
 abstract class WeathersRepository {
   Future <Weather> getCurrentWeatherByCity(String city);
@@ -10,4 +9,6 @@ abstract class WeathersRepository {
   });
 
   Future<List<City>> searchCities(String query);
+
+  Future<Weather> getWeatherById(int id);
 }

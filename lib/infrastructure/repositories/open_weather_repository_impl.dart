@@ -1,7 +1,4 @@
-import 'package:weather_app/domain/datasources/weathers_datasource.dart';
-import 'package:weather_app/domain/entities/city.dart';
-import 'package:weather_app/domain/entities/weather.dart';
-import 'package:weather_app/domain/repositories/weathers_repository.dart';
+import '/domain/domain.dart';
 
 class OpenWeatherRepositoryImpl extends WeathersRepository {
   final WeathersDatasource datasource;
@@ -24,5 +21,10 @@ class OpenWeatherRepositoryImpl extends WeathersRepository {
   @override
   Future<List<City>> searchCities(String query) {
     return datasource.searchCities(query);
+  }
+
+  @override
+  Future<Weather> getWeatherById(int id) {
+    return datasource.getWeatherById(id);
   }
 }
