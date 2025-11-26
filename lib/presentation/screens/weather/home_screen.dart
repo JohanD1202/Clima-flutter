@@ -153,7 +153,7 @@ class _HomeViewState extends ConsumerState<_HomeView> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (isOffline) {
+    if(isOffline) {
       return const SizedBox();
     }
 

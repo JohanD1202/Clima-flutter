@@ -4,9 +4,11 @@ import '/presentation/providers/providers.dart';
 
 final citySuggestionProvider = FutureProvider.family<List<City>, String>((ref, query) async {
 
-  if(query.trim().isEmpty) return [];
+  final cleanedQuery = query.trim();
+
+  if(cleanedQuery.isEmpty) return [];
 
   final repository = ref.read(weatherRepositoryProvider);
 
-  return await repository.searchCities(query);
+  return repository.searchCities(cleanedQuery);
 });

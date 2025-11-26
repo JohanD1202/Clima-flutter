@@ -52,24 +52,32 @@ class OpenWeatherDatasourceImpl extends WeathersDatasource {
   }
 
   @override
-Future<List<City>> searchCities(String query) async {
-  final response = await dio.get(
-    'https://api.openweathermap.org/geo/1.0/direct',
-    queryParameters: {
-      'q': query,
-      'limit': 3,
-      'appid': Environment.openWeatherKey,
-    },
-  );
+  Future<List<City>> searchCities(String query) async {
+    final response = await dio.get(
+      'https://wft-geo-db.p.rapidapi.com/v1/geo/cities',
+      queryParameters: {
+        'namePrefix': query,
+        'limit': 10,
+        'sort': '-population'
+      },
+      options: Options(
+        headers: {
+        'X-RapidAPI-Key': Environment.geoDbKey,
+        'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
+        }
+      )
+    );
+    final CityModelResponse model = CityModelResponse.fromJson(response.data);
 
-  final List citiesJson = response.data;
-
-  final cities = citiesJson
-      .map((json) => CityModelResponse.fromJson(json))
-      .map((model) => CityMapper.cityModelToEntity(model))
-      .toList();
-
-  return cities;
-}
-
+  return model.data.map((c) {
+    return City(
+      name: c.city,
+      country: c.country,
+      region: c.region,
+      lat: c.latitude,
+      lon: c.longitude,
+      population: c.population
+    );
+  }).toList();
+  }
 }

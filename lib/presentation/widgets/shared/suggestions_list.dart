@@ -51,7 +51,10 @@ class _SuggestionTile extends ConsumerWidget {
   final City city;
   final Color? suggestionText;
 
-  const _SuggestionTile({required this.city, this.suggestionText});
+  const _SuggestionTile({
+    required this.city,
+    this.suggestionText
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,7 +72,9 @@ class _SuggestionTile extends ConsumerWidget {
         style: TextStyle(color: suggestionText),
       ),
       subtitle:
-          city.state != null ? Text(city.state!) : const Text(""),
+          city.region.isNotEmpty
+          ? Text(city.region)
+          : const SizedBox(),
       onTap: () async => _onCitySelected(context, ref),
     );
   }
@@ -77,27 +82,29 @@ class _SuggestionTile extends ConsumerWidget {
   Future<void> _onCitySelected(BuildContext context, WidgetRef ref) async {
     final messenger = ScaffoldMessenger.of(context);
 
-    // validación duplicados
     final exists = isCityAlreadyAdded(
       lat: city.lat,
       lon: city.lon,
       list: ref.read(searchedWeatherProvider),
     );
 
-    if (exists) {
+    if(exists) {
+      final backgroundTheme = Theme.of(context).scaffoldBackgroundColor;
       messenger.showSnackBar(
-        const SnackBar(
-          content: LocalizedText(
+        SnackBar(
+          content: const LocalizedText(
             translations: {
               "es": "La ciudad ya está en la lista",
               "en": "The city is already on the list",
             },
           ),
+          backgroundColor: backgroundTheme,
         ),
       );
       ref.read(searchQueryProvider.notifier).state = '';
       return;
     }
+    final backgroundTheme = Theme.of(context).scaffoldBackgroundColor;
 
     await ref.read(weatherByCityProvider.notifier).searchByCoords(
           lat: city.lat,
@@ -107,13 +114,14 @@ class _SuggestionTile extends ConsumerWidget {
 
     if(weather == null) {
       messenger.showSnackBar(
-        const SnackBar(
-          content: LocalizedText(
+        SnackBar(
+          content: const LocalizedText(
             translations: {
               "es": "No se pudo obtener el clima para esta ciudad",
               "en": "The weather for this city could not be obtained",
             },
           ),
+          backgroundColor: backgroundTheme,
         ),
       );
       return;

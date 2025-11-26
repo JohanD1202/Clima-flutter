@@ -1,51 +1,41 @@
 class CityModelResponse {
-    final String name;
-    final double lat;
-    final double lon;
-    final String country;
-    final String state;
-    final LocalNames? localNames;
+  final List<CityResult> data;
 
-    CityModelResponse({
-        required this.name,
-        required this.lat,
-        required this.lon,
-        required this.country,
-        required this.state,
-        this.localNames,
-    });
+  CityModelResponse({
+    required this.data,
+  });
 
-    factory CityModelResponse.fromJson(Map<String, dynamic> json) => CityModelResponse(
-        name: json["name"],
-        lat: json["lat"]?.toDouble(),
-        lon: json["lon"]?.toDouble(),
-        country: json["country"],
-        state: json["state"],
-        localNames: json["local_names"] == null ? null : LocalNames.fromJson(json["local_names"]),
-    );
-
-    Map<String, dynamic> toJson() => {
-        "name": name,
-        "lat": lat,
-        "lon": lon,
-        "country": country,
-        "state": state,
-        "local_names": localNames?.toJson(),
-    };
+  factory CityModelResponse.fromJson(Map<String, dynamic> json) =>
+      CityModelResponse(
+        data: List<CityResult>.from(
+          json['data'].map((x) => CityResult.fromJson(x)),
+        ),
+      );
 }
 
-class LocalNames {
-    final String en;
+class CityResult {
+  final String city;
+  final String country;
+  final String region;
+  final double latitude;
+  final double longitude;
+  final int? population;
 
-    LocalNames({
-        required this.en,
-    });
+  CityResult({
+    required this.city,
+    required this.country,
+    required this.region,
+    required this.latitude,
+    required this.longitude,
+    this.population,
+  });
 
-    factory LocalNames.fromJson(Map<String, dynamic> json) => LocalNames(
-        en: json["en"],
-    );
-
-    Map<String, dynamic> toJson() => {
-        "en": en,
-    };
+  factory CityResult.fromJson(Map<String, dynamic> json) => CityResult(
+        city: json['city'],
+        country: json['country'],
+        region: json['region'] ?? '',
+        latitude: (json['latitude'] as num).toDouble(),
+        longitude: (json['longitude'] as num).toDouble(),
+        population: json['population'],
+      );
 }

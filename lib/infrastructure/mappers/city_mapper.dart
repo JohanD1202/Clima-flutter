@@ -1,16 +1,13 @@
-import '/infrastructure/infrastructure.dart';
 import '/domain/domain.dart';
+import '/infrastructure/models/open_weather/city_model_response.dart';
 
 class CityMapper {
-  static City cityModelToEntity(CityModelResponse openWeatherCity) => City(
-    name: openWeatherCity.name,
-    country: openWeatherCity.country.trim().isEmpty
-      ? 'N/A'
-      : openWeatherCity.country,
-    state: openWeatherCity.state.trim().isEmpty
-      ? 'N/A'
-      : openWeatherCity.state,
-    lat: openWeatherCity.lat,
-    lon: openWeatherCity.lon
+  static City cityModelToEntity(CityResult model) => City(
+    name: model.city,
+    country: model.country,
+    region: model.region,
+    lat: model.latitude,
+    lon: model.longitude,
+    population: model.population,
   );
 }
