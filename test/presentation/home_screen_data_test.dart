@@ -23,7 +23,7 @@ void main() {
       });
 
       const fakeWeather = Weather(
-        city: 'Cali',
+        city: 'Tuluá',
         temperature: 25,
         description: 'Soleado',
         feelsLike: 24,
@@ -49,8 +49,8 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            connectivityStatusProvider.overrideWithValue(
-              const AsyncData(ConnectivityResult.wifi),
+            connectivityStatusProvider.overrideWith(
+              (ref) => Stream.value(ConnectivityResult.wifi),
             ),
 
             weatherByLocationProvider.overrideWith(
@@ -68,7 +68,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 200));
 
       expect(find.byType(WeatherInfo), findsOneWidget);
-      expect(find.text('Cali'), findsOneWidget);
+      expect(find.text('Tuluá'), findsOneWidget);
     },
   );
 }
