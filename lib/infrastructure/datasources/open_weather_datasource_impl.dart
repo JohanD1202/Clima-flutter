@@ -1,17 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:weather_app/config/constants/environment.dart';
-import 'package:weather_app/infrastructure/infrastructure.dart';
+import '/infrastructure/infrastructure.dart';
 import '/domain/domain.dart';
 
 class OpenWeatherDatasourceImpl extends WeathersDatasource {
-  final dio = Dio(BaseOptions(
-    baseUrl: 'https://api.openweathermap.org/data/2.5',
-    queryParameters: {
-      'appid': Environment.openWeatherKey,
-      'units': 'metric',
-      'lang': 'es'
-    },
-  ));
+
+  final Dio dio;
+  final String appId;
+  final String geoDbKey;
+
+  OpenWeatherDatasourceImpl(this.dio, {required this.appId, required this.geoDbKey});
+
 
   Weather _jsonToWeather(Map<String, dynamic> json) {
     final openWeatherResponse = OpenWeatherResponse.fromJson(json);
@@ -62,7 +60,7 @@ class OpenWeatherDatasourceImpl extends WeathersDatasource {
       },
       options: Options(
         headers: {
-        'X-RapidAPI-Key': Environment.geoDbKey,
+        'X-RapidAPI-Key': geoDbKey,
         'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
         }
       )

@@ -35,7 +35,6 @@ class GeolocationService {
     LocationPermission permission = await checkPermission();
 
     if(permission == LocationPermission.denied) {
-      // Solicitar permiso
       permission = await requestPermission();
       if(permission == LocationPermission.denied) {
         throw Exception('El usuario negó el permiso de ubicación.');

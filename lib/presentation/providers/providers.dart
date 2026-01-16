@@ -8,3 +8,4 @@ export 'weather/weather_by_location_provider.dart';
 export 'weather/weather_provider.dart';
 export 'weather/weather_repository_provider.dart';
 export 'network/network_provider.dart';
+export 'weather/dio_provider.dart';
